@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import { PERSONAL_INFO } from '../constants';
 import MagneticButton from './MagneticButton';
+import { Loader2 } from 'lucide-react';
 
 const ContactFooter: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +10,8 @@ const ContactFooter: React.FC = () => {
     email: '',
     message: ''
   });
+  
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,10 +19,50 @@ const ContactFooter: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder for submission logic
-    console.log('Form Submitted:', formData);
-    alert('Thanks for reaching out!');
-    setFormData({ name: '', email: '', message: '' });
+    setLoading(true);
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const adminTemplateId = import.meta.env.VITE_EMAILJS_ADMIN_TEMPLATE_ID;
+    const autoReplyTemplateId = import.meta.env.VITE_EMAILJS_AUTOREPLY_TEMPLATE_ID;
+
+    // 1. Send Notification to YOU (Admin)
+    emailjs.send(
+      serviceId,
+      adminTemplateId,
+      {
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+        to_name: PERSONAL_INFO.name,
+      },
+      publicKey
+    )
+    .then(() => {
+      // 2. Send Auto-Reply to USER (Visitor)
+      return emailjs.send(
+        serviceId,
+        autoReplyTemplateId,
+        {
+          from_name: formData.name,
+          from_email: formData.email, // This sends the email TO the visitor
+          message: formData.message,
+          to_name: PERSONAL_INFO.name,
+        },
+        publicKey
+      );
+    })
+    .then(() => {
+      // Success: Both emails sent
+      setLoading(false);
+      alert('Message sent successfully! Please check your inbox for a confirmation.');
+      setFormData({ name: '', email: '', message: '' });
+    })
+    .catch((error) => {
+      setLoading(false);
+      console.error('EmailJS Error:', error);
+      alert('Something went wrong. Please try again later.');
+    });
   };
 
   return (
@@ -28,7 +72,7 @@ const ContactFooter: React.FC = () => {
           LET'S TALK
         </h2>
 
-        {/* NEW: Enquiry Form */}
+        {/* Enquiry Form */}
         <form onSubmit={handleSubmit} className="w-full max-w-xl mb-20 glass-card p-8 md:p-10 rounded-3xl border border-white/10 text-left">
           <div className="space-y-6">
             <div>
@@ -71,14 +115,20 @@ const ContactFooter: React.FC = () => {
               />
             </div>
             <div className="flex justify-center pt-2">
-              <MagneticButton className="w-full md:w-auto">
-                SEND ENQUIRY
+              <MagneticButton className="w-full md:w-auto flex items-center justify-center gap-2">
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin w-5 h-5" /> SENDING...
+                  </>
+                ) : (
+                  "SEND ENQUIRY"
+                )}
               </MagneticButton>
             </div>
           </div>
         </form>
         
-        {/* Existing Email Button with context text */}
+        {/* Direct Email Link */}
         <div className="mb-16">
             <p className="text-gray-500 mb-6 font-mono text-sm">OR SEND A DIRECT EMAIL</p>
             <MagneticButton href={`mailto:${PERSONAL_INFO.email}`} className="text-xl md:text-2xl px-12 py-6">
