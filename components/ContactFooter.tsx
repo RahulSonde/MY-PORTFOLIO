@@ -1,16 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PERSONAL_INFO } from '../constants';
 import MagneticButton from './MagneticButton';
 
 const ContactFooter: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Placeholder for submission logic
+    console.log('Form Submitted:', formData);
+    alert('Thanks for reaching out!');
+    setFormData({ name: '', email: '', message: '' });
+  };
+
   return (
     <footer id="contact" className="relative px-6 lg:px-20 pt-32 pb-12 z-10 bg-gradient-to-t from-black to-transparent">
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
         <h2 className="text-5xl md:text-7xl lg:text-9xl font-display font-bold mb-12 tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10">
           LET'S TALK
         </h2>
+
+        {/* NEW: Enquiry Form */}
+        <form onSubmit={handleSubmit} className="w-full max-w-xl mb-20 glass-card p-8 md:p-10 rounded-3xl border border-white/10 text-left">
+          <div className="space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-xs font-mono text-neon-blue mb-2 tracking-wider">NAME</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full bg-white/5 border border-white/10 rounded-lg p-4 text-white placeholder-gray-600 focus:outline-none focus:border-cyber-lime transition-colors font-mono"
+                placeholder="John Doe"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-xs font-mono text-neon-blue mb-2 tracking-wider">EMAIL</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full bg-white/5 border border-white/10 rounded-lg p-4 text-white placeholder-gray-600 focus:outline-none focus:border-cyber-lime transition-colors font-mono"
+                placeholder="john@example.com"
+              />
+            </div>
+            <div>
+              <label htmlFor="message" className="block text-xs font-mono text-neon-blue mb-2 tracking-wider">MESSAGE</label>
+              <textarea 
+                id="message" 
+                name="message" 
+                required
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                className="w-full bg-white/5 border border-white/10 rounded-lg p-4 text-white placeholder-gray-600 focus:outline-none focus:border-cyber-lime transition-colors font-mono resize-none"
+                placeholder="Tell me about your project..."
+              />
+            </div>
+            <div className="flex justify-center pt-2">
+              <MagneticButton className="w-full md:w-auto">
+                SEND ENQUIRY
+              </MagneticButton>
+            </div>
+          </div>
+        </form>
         
+        {/* Existing Email Button with context text */}
         <div className="mb-16">
+            <p className="text-gray-500 mb-6 font-mono text-sm">OR SEND A DIRECT EMAIL</p>
             <MagneticButton href={`mailto:${PERSONAL_INFO.email}`} className="text-xl md:text-2xl px-12 py-6">
                 {PERSONAL_INFO.email}
             </MagneticButton>
