@@ -40,13 +40,12 @@ const ContactFooter: React.FC = () => {
     )
     .then(() => {
       // 2. Send Auto-Reply to USER (Visitor)
-      // Note: We return the promise so we can chain the .then()
       return emailjs.send(
         serviceId,
         autoReplyTemplateId,
         {
           from_name: formData.name,
-          from_email: formData.email, // IMPORTANT: Ensure your template sends TO this variable
+          from_email: formData.email, // This sends the email TO the visitor
           message: formData.message,
           to_name: PERSONAL_INFO.name,
         },
@@ -54,7 +53,7 @@ const ContactFooter: React.FC = () => {
       );
     })
     .then(() => {
-      // Both emails sent successfully
+      // Success: Both emails sent
       setLoading(false);
       alert('Message sent successfully! Please check your inbox for a confirmation.');
       setFormData({ name: '', email: '', message: '' });
