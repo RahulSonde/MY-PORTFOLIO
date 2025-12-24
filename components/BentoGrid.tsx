@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState, useEffect } from 'react'; // Added useEffect
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { EDUCATION, CERTIFICATIONS } from '../constants';
@@ -8,8 +8,19 @@ gsap.registerPlugin(ScrollTrigger);
 
 const BentoGrid: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  // State to track the selected certificate for the popup
   const [selectedCert, setSelectedCert] = useState<{ name: string; image: string } | null>(null);
+
+  // 1. LOCK SCROLL WHEN MODAL IS OPEN
+  useEffect(() => {
+    if (selectedCert) {
+      document.body.style.overflow = 'hidden'; // Disable scroll
+    } else {
+      document.body.style.overflow = 'auto'; // Enable scroll
+    }
+    return () => {
+      document.body.style.overflow = 'auto'; // Cleanup on unmount
+    };
+  }, [selectedCert]);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -36,7 +47,7 @@ const BentoGrid: React.FC = () => {
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]">
-        {/* Education 1 - Large Card */}
+        {/* Education 1 */}
         <div className="bento-item glass-card col-span-1 md:col-span-2 p-8 rounded-3xl relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <GraduationCap size={120} />
@@ -51,7 +62,7 @@ const BentoGrid: React.FC = () => {
           </ul>
         </div>
 
-        {/* Certifications - Tall Card */}
+        {/* Certifications */}
         <div className="bento-item glass-card col-span-1 row-span-2 p-8 rounded-3xl relative overflow-hidden group">
             <div className="absolute -bottom-10 -right-10 opacity-10 group-hover:opacity-20 transition-opacity">
                 <Award size={200} />
@@ -63,11 +74,9 @@ const BentoGrid: React.FC = () => {
                 {CERTIFICATIONS.map((cert, idx) => (
                     <div 
                         key={idx} 
-                        // Add click handler and cursor style
                         onClick={() => setSelectedCert(cert)}
                         className="border-l-2 border-white/10 pl-4 py-1 hover:border-cyber-lime hover:bg-white/5 transition-all cursor-pointer"
                     >
-                        {/* Note: changed 'cert' to 'cert.name' */}
                         <p className="text-sm text-gray-300">{cert.name}</p>
                     </div>
                 ))}
@@ -86,12 +95,13 @@ const BentoGrid: React.FC = () => {
       {/* POPUP MODAL */}
       {selectedCert && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity"
+          // 2. UPDATED Z-INDEX to z-[9990] (high enough to cover content, low enough for cursor)
+          className="fixed inset-0 z-[9990] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md transition-opacity"
           onClick={() => setSelectedCert(null)}
         >
           <div 
             className="glass-card max-w-4xl w-full rounded-3xl overflow-hidden relative shadow-[0_0_50px_rgba(204,255,0,0.1)] animate-in fade-in zoom-in duration-300 border border-white/20"
-            onClick={(e) => e.stopPropagation()} // Prevent close on content click
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b border-white/10 bg-white/5">
@@ -107,7 +117,7 @@ const BentoGrid: React.FC = () => {
               </button>
             </div>
 
-            {/* Modal Content (Image) */}
+            {/* Modal Content */}
             <div className="p-4 md:p-8 bg-black/40 flex justify-center items-center min-h-[300px]">
               <img 
                 src={selectedCert.image} 
