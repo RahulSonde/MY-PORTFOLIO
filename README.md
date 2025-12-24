@@ -44,3 +44,4 @@ An immersive, futuristic portfolio website built for a **Data Analyst & QA Engin
 ├── .env                  # Environment variables (not committed)
 ├── tailwind.config.js    # Tailwind theme configuration
 └── vite.config.ts        # Vite configuration
+
