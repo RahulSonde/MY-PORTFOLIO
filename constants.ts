@@ -90,9 +90,36 @@ export const PROJECTS: Project[] = [
 ];
 
 export const CERTIFICATIONS = [
-  "Data Analytics Certification",
-  "The Complete SQL Bootcamp",
-  "The Complete Python Pro Bootcamp",
-  "SQL Fundamentals Masterclass",
-  "Data Analytics Foundation"
+  { 
+    name: "Data Analytics Certification", 
+    image: "https://upskill.tutedude.com/certificate/TD-RAHU-DA-1413" // Replace with your image path
+  },
+  { 
+    name: "The Complete SQL Bootcamp", 
+    image: "https://www.udemy.com/certificate/UC-1dbe2c18-d4a3-4a41-aea1-c2eb790ada9d/" 
+  },
+  { 
+    name: "The Complete Python Pro Bootcamp", 
+    image: "https://www.udemy.com/certificate/UC-22b11295-07d3-4ff9-a166-6fa7fdc99602/" 
+  },
+  { 
+    name: "SQL Fundamentals Masterclass", 
+    image: "https://www.wscubetech.com/verify-certificate/WS2025M70898D5818734" 
+  },
+  { 
+    name: "Data Analytics Foundation", 
+    image: "https://www.coursera.org/account/accomplishments/certificate/CACNRD39FAFD" 
+  },
+  { 
+    name: "Share Data Using Google Data Cloud Skill Badge", 
+    image: "https://www.credly.com/badges/fe6d96ec-68b0-4818-8900-c1e44a6540dd/public_url" 
+  },
+  { 
+    name: "Google Cloud - Command Line Skill Badge", 
+    image: "https://www.credly.com/badges/0cc070e8-9b79-4989-b2ba-1039c5c5d7b7/public_url" 
+  },
+  { 
+    name: "Streaming Analytics into BigQuery Skill Badge", 
+    image: "https://www.credly.com/badges/2dbd66b0-2606-4bd1-be3e-e3a00ad8fc87/public_url" 
+  }
 ];
