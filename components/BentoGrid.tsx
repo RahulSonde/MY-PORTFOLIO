@@ -1,13 +1,15 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { EDUCATION, CERTIFICATIONS } from '../constants';
-import { GraduationCap, Award } from 'lucide-react';
+import { GraduationCap, Award, X } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const BentoGrid: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  // State to track the selected certificate for the popup
+  const [selectedCert, setSelectedCert] = useState<{ name: string; image: string } | null>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -59,8 +61,14 @@ const BentoGrid: React.FC = () => {
             </h3>
             <div className="space-y-4">
                 {CERTIFICATIONS.map((cert, idx) => (
-                    <div key={idx} className="border-l-2 border-white/10 pl-4 py-1 hover:border-cyber-lime hover:bg-white/5 transition-all">
-                        <p className="text-sm text-gray-300">{cert}</p>
+                    <div 
+                        key={idx} 
+                        // Add click handler and cursor style
+                        onClick={() => setSelectedCert(cert)}
+                        className="border-l-2 border-white/10 pl-4 py-1 hover:border-cyber-lime hover:bg-white/5 transition-all cursor-pointer"
+                    >
+                        {/* Note: changed 'cert' to 'cert.name' */}
+                        <p className="text-sm text-gray-300">{cert.name}</p>
                     </div>
                 ))}
             </div>
@@ -74,6 +82,42 @@ const BentoGrid: React.FC = () => {
             <p className="text-sm text-gray-300">{EDUCATION[1].details[0]}</p>
         </div>
       </div>
+
+      {/* POPUP MODAL */}
+      {selectedCert && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity"
+          onClick={() => setSelectedCert(null)}
+        >
+          <div 
+            className="glass-card max-w-4xl w-full rounded-3xl overflow-hidden relative shadow-[0_0_50px_rgba(204,255,0,0.1)] animate-in fade-in zoom-in duration-300 border border-white/20"
+            onClick={(e) => e.stopPropagation()} // Prevent close on content click
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b border-white/10 bg-white/5">
+              <h3 className="text-2xl font-display font-bold text-white flex items-center gap-3">
+                <Award className="text-cyber-lime" size={24} />
+                {selectedCert.name}
+              </h3>
+              <button 
+                onClick={() => setSelectedCert(null)}
+                className="p-2 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Modal Content (Image) */}
+            <div className="p-4 md:p-8 bg-black/40 flex justify-center items-center min-h-[300px]">
+              <img 
+                src={selectedCert.image} 
+                alt={selectedCert.name}
+                className="max-w-full max-h-[70vh] w-auto h-auto rounded-lg shadow-2xl border border-white/10 object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
