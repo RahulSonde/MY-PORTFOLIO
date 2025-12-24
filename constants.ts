@@ -96,11 +96,11 @@ export const CERTIFICATIONS = [
   },
   { 
     name: "The Complete SQL Bootcamp", 
-    image: "/certificates/SQL.jpeg" 
+    image: "/certificates/SQL.png" 
   },
   { 
     name: "The Complete Python Pro Bootcamp", 
-    image: "/certificates/python.jpeg" 
+    image: "/certificates/PYTHON.png" 
   },
   { 
     name: "SQL Fundamentals Masterclass", 
