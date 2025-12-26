@@ -48,7 +48,7 @@ const Hero: React.FC = () => {
           <div className="overflow-hidden"><span className="hero-text-line block text-gradient">& QA ENGINEER</span></div>
         </h1>
         
-        <p ref={subtitleRef} className="text-xl md:text-2xl text-gray-400 max-w-2xl mb-12 font-light">
+        <p ref={subtitleRef} className="max-w-3xl mb-12 border-l-2 border-green-500 pl-6 opacity-90">
           {PERSONAL_INFO.summary}
         </p>
 
